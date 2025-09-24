@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "261775272152",
+    "project_id": "dsm-firebase-points-grupo3",
+    "storage_bucket": "dsm-firebase-points-grupo3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261775272152:android:792332d1dfece032010fad",
+        "android_client_info": {
+          "package_name": "com.example.a252dsmg1points"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4xJKtNhY9i5e8TFuWsDNECDJI7EdGuHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
