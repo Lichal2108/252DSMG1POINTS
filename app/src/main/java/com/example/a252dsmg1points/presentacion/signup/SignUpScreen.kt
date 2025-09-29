@@ -44,7 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.compose.observeAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -91,16 +91,18 @@ fun SignUpScreen(
     
     // Observar cambios en el resultado de autenticación
     LaunchedEffect(authResult) {
-        when (authResult) {
-            is com.example.a252dsmg1points.data.model.AuthResult.Success -> {
-                if (authResult.user.uid.isNotEmpty()) {
-                    navigationToHome()
+        authResult?.let { result ->
+            when (result) {
+                is com.example.a252dsmg1points.data.model.AuthResult.Success -> {
+                    if (result.user.uid.isNotEmpty()) {
+                        navigationToHome()
+                    }
                 }
+                is com.example.a252dsmg1points.data.model.AuthResult.Error -> {
+                    errorMessage = result.message
+                }
+                else -> {}
             }
-            is com.example.a252dsmg1points.data.model.AuthResult.Error -> {
-                errorMessage = authResult.message
-            }
-            else -> {}
         }
     }
 
