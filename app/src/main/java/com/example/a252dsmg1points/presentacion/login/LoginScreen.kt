@@ -35,10 +35,12 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,7 +67,7 @@ import com.example.a252dsmg1points.ui.theme.White
 
 @Composable
 fun LogInScreen(
-    auth: com.google.firebase.auth.FirebaseAuth? = null,
+    authViewModel: com.example.a252dsmg1points.presentation.viewmodel.AuthViewModel,
     navigationToSignUp: () -> Unit = {},
     navigationToHome: () -> Unit = {},
     navigationBack: () -> Unit = {}
@@ -73,8 +75,26 @@ fun LogInScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
+    
+    val authResult by authViewModel.authResult.observeAsState()
+    val isLoading by authViewModel.isLoading.observeAsState(false)
+    
     var errorMessage by remember { mutableStateOf("") }
+    
+    // Observar cambios en el resultado de autenticación
+    LaunchedEffect(authResult) {
+        when (authResult) {
+            is com.example.a252dsmg1points.data.model.AuthResult.Success -> {
+                if (authResult.user.uid.isNotEmpty()) {
+                    navigationToHome()
+                }
+            }
+            is com.example.a252dsmg1points.data.model.AuthResult.Error -> {
+                errorMessage = authResult.message
+            }
+            else -> {}
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -242,18 +262,8 @@ fun LogInScreen(
                     Button(
                         onClick = {
                             if (email.isNotEmpty() && password.isNotEmpty()) {
-                                isLoading = true
                                 errorMessage = ""
-                                // TODO: Implement Firebase authentication
-                                // auth?.signInWithEmailAndPassword(email, password)
-                                //     ?.addOnCompleteListener { task ->
-                                //         isLoading = false
-                                //         if (task.isSuccessful) {
-                                //             navigationToHome()
-                                //         } else {
-                                //             errorMessage = "Error al iniciar sesión"
-                                //         }
-                                //     }
+                                authViewModel.signIn(email, password)
                             } else {
                                 errorMessage = "Por favor completa todos los campos"
                             }

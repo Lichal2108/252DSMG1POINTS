@@ -39,10 +39,12 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,7 +71,7 @@ import com.example.a252dsmg1points.ui.theme.White
 
 @Composable
 fun SignUpScreen(
-    auth: com.google.firebase.auth.FirebaseAuth? = null,
+    authViewModel: com.example.a252dsmg1points.presentation.viewmodel.AuthViewModel,
     navigationToLogin: () -> Unit = {},
     navigationToHome: () -> Unit = {},
     navigationBack: () -> Unit = {}
@@ -81,9 +83,26 @@ fun SignUpScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
     var acceptTerms by remember { mutableStateOf(false) }
+    
+    val authResult by authViewModel.authResult.observeAsState()
+    val isLoading by authViewModel.isLoading.observeAsState(false)
+    
+    // Observar cambios en el resultado de autenticación
+    LaunchedEffect(authResult) {
+        when (authResult) {
+            is com.example.a252dsmg1points.data.model.AuthResult.Success -> {
+                if (authResult.user.uid.isNotEmpty()) {
+                    navigationToHome()
+                }
+            }
+            is com.example.a252dsmg1points.data.model.AuthResult.Error -> {
+                errorMessage = authResult.message
+            }
+            else -> {}
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -296,18 +315,8 @@ fun SignUpScreen(
                         onClick = {
                             if (validateForm(fullName, email, phone, password, confirmPassword, acceptTerms)) {
                                 if (password == confirmPassword) {
-                                    isLoading = true
                                     errorMessage = ""
-                                    // TODO: Implement Firebase authentication
-                                    // auth?.createUserWithEmailAndPassword(email, password)
-                                    //     ?.addOnCompleteListener { task ->
-                                    //         isLoading = false
-                                    //         if (task.isSuccessful) {
-                                    //             navigationToHome()
-                                    //         } else {
-                                    //             errorMessage = "Error al crear la cuenta"
-                                    //         }
-                                    //     }
+                                    authViewModel.signUp(email, password, fullName, phone)
                                 } else {
                                     errorMessage = "Las contraseñas no coinciden"
                                 }
