@@ -1,21 +1,17 @@
 package com.example.a252dsmg1points
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.a252dsmg1points.presentacion.initial.InitialScreen
 import com.example.a252dsmg1points.presentacion.login.LogInScreen
 import com.example.a252dsmg1points.presentacion.signup.SignUpScreen
 import com.example.a252dsmg1points.presentacion.profile.ProfileScreen
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun NavigationWrapper(
-    navHostController: NavHostController,
-    auth: FirebaseAuth
+    navHostController: NavHostController
 ){
     NavHost(navController=navHostController, startDestination = "initial") {
         composable(route="initial"){
