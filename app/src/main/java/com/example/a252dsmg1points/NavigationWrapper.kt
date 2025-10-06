@@ -42,7 +42,8 @@ fun NavigationWrapper(
             val authViewModel: com.example.a252dsmg1points.presentation.viewmodel.AuthViewModel = hiltViewModel()
             ProfileScreen(
                 authViewModel = authViewModel,
-                navigationBack = { navHostController.popBackStack() }
+                navigationBack = { navHostController.popBackStack() },
+                navigationToInitial = { navHostController.navigate("initial") }
             )
         }
     }
