@@ -12,10 +12,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthRepository @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore,
-    private val storage: FirebaseStorage
+public class AuthRepository @Inject constructor(
+    protected val auth: FirebaseAuth,
+    protected val firestore: FirebaseFirestore,
+    protected val storage: FirebaseStorage
 ) {
     
     suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult {

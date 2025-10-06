@@ -17,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var navHostController: androidx.navigation.NavHostController
-    private lateinit var auth: FirebaseAuth
+    protected lateinit var navHostController: androidx.navigation.NavHostController
+    protected lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,4 +37,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
