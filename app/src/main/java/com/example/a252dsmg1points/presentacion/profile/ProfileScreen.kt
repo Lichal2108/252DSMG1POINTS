@@ -68,7 +68,8 @@ import com.example.a252dsmg1points.ui.theme.White
 @Composable
 fun ProfileScreen(
     authViewModel: AuthViewModel,
-    navigationBack: () -> Unit = {}
+    navigationBack: () -> Unit = {},
+    navigationToInitial: () -> Unit
 ) {
     var isEditing by remember { mutableStateOf(false) }
     var fullName by remember { mutableStateOf("") }
@@ -151,28 +152,43 @@ fun ProfileScreen(
                         tint = White
                     )
                 }
-                
                 Text(
                     text = "Mi Perfil",
                     color = White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
-                IconButton(
-                    onClick = { isEditing = !isEditing },
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            color = if (isEditing) Green else BackgroundButton,
-                            shape = CircleShape
+                Row {
+                    IconButton(
+                        onClick = { isEditing = !isEditing },
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = if (isEditing) Green else BackgroundButton,
+                                shape = CircleShape
+                            )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = White
                         )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
-                        tint = White
-                    )
+                    }
+                    IconButton(
+                        onClick = navigationToInitial,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = Green,
+                                shape = CircleShape
+                            )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Inicio rápido",
+                            tint = White
+                        )
+                    }
                 }
             }
             
@@ -401,6 +417,21 @@ fun ProfileScreen(
             }
             
             Spacer(modifier = Modifier.height(40.dp))
+
+            // Navigation to initial view button
+            Button(
+                onClick = { navigationToInitial() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Green),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "Ir a vista inicial",
+                    color = Black,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
